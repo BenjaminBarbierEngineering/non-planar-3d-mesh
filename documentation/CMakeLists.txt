@@ -1,0 +1,12 @@
+find_package(Doxygen REQUIRED)
+
+set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+set(DOXYGEN_GENERATE_HTML YES)
+set(DOXYGEN_GENERATE_LATEX NO)
+set(DOXYGEN_RECURSIVE YES)
+set(DOXYGEN_EXTRACT_ALL YES)
+
+doxygen_add_docs(${PROJECT_NAME}_documentation
+	"${PROJECT_SOURCE_DIR}/include"
+	COMMENT "Generating API documentation with Doxygen"
+)

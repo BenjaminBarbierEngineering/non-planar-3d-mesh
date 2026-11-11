@@ -1,0 +1,39 @@
+{
+  "name": "Build a temporary image",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "runArgs": [
+    "--rm",
+    "--network=host",
+    "--privileged"
+  ],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash"
+          }
+        }
+      },
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
+        "ms-vscode.cpptools-extension-pack",
+        "ms-vscode.cpptools-themes",
+        "xaver.clang-format",
+        "twxs.cmake",
+        "josetr.cmake-language-support-vscode"
+      ]
+    }
+  },
+  "containerEnv": {
+    "XAUTHORITY": "${localEnv:XAUTHORITY}",
+    "DISPLAY": "${localEnv:DISPLAY}"
+  },
+  "mounts": [
+    "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.bashrc,target=/home/vscode/.bashrc,type=bind,consistency=cached"
+  ]
+}

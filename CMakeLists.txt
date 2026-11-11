@@ -49,3 +49,9 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+option(BUILD_DOCUMENTATION "Build the Doxygen API documentation" OFF)
+
+if(BUILD_DOCUMENTATION)
+	add_subdirectory(documentation)
+endif()

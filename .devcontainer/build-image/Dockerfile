@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:jammy-20240111
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -9,12 +9,21 @@ ARG USER_GID=${USER_UID}
 # Install common command-line utilities and sudo for the development user.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        bash \
         git \
         git-lfs \
         vim \
+        wget \
+        tree \
+        file \
         unzip \
         bash-completion \
         sudo \
+        dbus-x11 \
+        net-tools \
+        terminator \
+        gnome-terminal \
+        x11-apps \
     && rm -rf /var/lib/apt/lists/*
 
 # Install the C++ build toolchain.
@@ -28,7 +37,7 @@ RUN apt-get update \
         clang \
         clang-format \
         make \
-        ninja-build \
+        doxygen \
         pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
@@ -71,7 +80,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd --gid "${USER_GID}" "${USERNAME}" \
-    && useradd --uid "${USER_UID}" --gid "${USER_GID}" --create-home "${USERNAME}" \
+    && useradd --uid "${USER_UID}" --gid "${USER_GID}" --create-home --shell /bin/bash "${USERNAME}" \
     && printf '%s ALL=(ALL) NOPASSWD:ALL\n' "${USERNAME}" > "/etc/sudoers.d/${USERNAME}" \
     && chmod 0440 "/etc/sudoers.d/${USERNAME}"
 

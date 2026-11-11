@@ -1,6 +1,6 @@
 {
-  "name": "Non-planar 3D mesh development",
-  "image": "PUT THE NAME WITH TAG OF THE BUILT IMAGE HERE",
+  "name": "Use built image",
+  "image": "non-planar-3d-mesh-sdk:0.0.1",
   "runArgs": [
     "--rm",
     "--network=host",
@@ -31,7 +31,7 @@
     "DISPLAY": "${localEnv:DISPLAY}"
   },
   "mounts": [
-    "source=${localEnv:HOME}/.gitconfig,target=/workspaces/${localEnv:HOME}/.gitconfig,type=bind,consistency=cached",
-    "source=${localEnv:HOME}/.bashrc,target=/workspaces/${localEnv:HOME}/.bashrc,type=bind,consistency=cached"
+    "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.bashrc,target=/home/vscode/.bashrc,type=bind,consistency=cached"
   ]
 }

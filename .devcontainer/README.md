@@ -4,6 +4,12 @@ This folder contains two Dev Container configurations. Both provide the same
 development environment and VS Code extensions, but differ in how the
 container image is obtained.
 
+The build image uses Docker Hub's official `ubuntu:jammy-20240111` image, a
+dated Ubuntu 22.04 LTS (Jammy Jellyfish) tag. See the
+[official Ubuntu image](https://hub.docker.com/_/ubuntu) and
+[Ubuntu 22.04 (Jammy) releases](https://releases.ubuntu.com/jammy/).
+Both configurations mount the host `.bashrc` at `/home/vscode/.bashrc`.
+
 ### Build the image through VS Code
 
 Use this option to let the Dev Containers extension build the image for you:

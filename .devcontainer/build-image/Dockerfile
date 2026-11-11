@@ -19,14 +19,25 @@ RUN apt-get update \
         unzip \
         bash-completion \
         sudo \
-        dbus-x11 \
         net-tools \
-        terminator \
-        gnome-terminal \
-        x11-apps \
     && rm -rf /var/lib/apt/lists/*
 
-# Install the C++ build toolchain.
+# Install Python and its development, package-management, and scientific tools.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        python3 \
+        python3-dev \
+        python3-pip \
+        python3-venv \
+        python3-numpy \
+        python3-scipy \
+        python3-pandas \
+        python3-matplotlib \
+        python3-sklearn \
+        python3-plotly \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install the C++/CMake build toolchain and project libraries.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         build-essential \
@@ -39,44 +50,23 @@ RUN apt-get update \
         make \
         doxygen \
         pkg-config \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Qt development tools.
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        qtbase5-dev \
-        qtchooser \
-        qt5-qmake \
-        qtbase5-dev-tools \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install C++ libraries that may be used by the project.
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
         libtbb-dev \
         nlohmann-json3-dev \
         libceres-dev \
         libeigen3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python and its development/package-management tools.
+# Install UI tools and Qt development tools.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        python3 \
-        python3-dev \
-        python3-pip \
-        python3-venv \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Python scientific packages in dependency order.
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        python3-numpy \
-        python3-scipy \
-        python3-pandas \
-        python3-matplotlib \
-        python3-sklearn \
-        python3-plotly \
+        dbus-x11 \
+        terminator \
+        gnome-terminal \
+        x11-apps \
+        qtbase5-dev \
+        qtchooser \
+        qt5-qmake \
+        qtbase5-dev-tools \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd --gid "${USER_GID}" "${USERNAME}" \

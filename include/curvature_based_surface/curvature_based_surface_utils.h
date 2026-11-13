@@ -61,6 +61,30 @@ namespace curvature_based_surface {
   }
 
   /**
+   * @brief Function to compute the tangent orienting the osculating plane to a point.
+   *
+   * @tparam The data type for the position, tangent, normal, binormal, and curvature. Could be
+   * float, double or Jet.
+   * @param initial_position Initial position, locating the osculating plane.
+   * @param initial_normal Initial normal vector, bounding the osculating plane to one degree of
+   * freedom (the tangent).
+   * @param point Point fixing the last degree of freedom for the osculating plane. With this one,
+   * we have the initial tangent.
+   *
+   * @return Computed initial tangent.
+   */
+  template <typename T> compute_first_tangent_vector(const Eigen::Matrix<T, 3, 1>& initial_position,
+                                                     const Eigen::Matrix<T, 3, 1>& initial_normal,
+                                                     const Eigen::Matrix<T, 3, 1>& point) {
+    Eigen::Matrix<T, 3, 1> vector_element_to_initial_point = point - initial_position;
+
+    Eigen::Matrix<T, 3, 1> resulting_tangent
+        = vector_element_to_point - vector_element_to_point.dot(initial_normal) * initial_normal;
+    resulting_tangent.normalize();
+    return resulting_tangent;
+  }
+
+  /**
    * @brief Computes the closest Frenet-Serret frame element to a given point in space, based on a
    * curvature-based surface element.
    *
@@ -77,15 +101,11 @@ namespace curvature_based_surface {
     // First, retrieve the corresponding first tangent, orienting the osculating plane of the first
     // frame element to expand. The point should be in this plane.
     // Then, create the first frame element from which to expand.
-    Eigen::Matrix<T, 3, 1> vector_element_to_point
-        = point - surface_element.frenet_serret_frame.position;
     FrenetSerretFrameElement<T> first_frame_element;
     first_frame_element.position = surface_element.frenet_serret_frame.position;
     first_frame_element.tangent
-        = vector_element_to_point
-          - vector_element_to_point.dot(surface_element.frenet_serret_frame.normal)
-                * surface_element.frenet_serret_frame.normal;
-    first_frame_element.tangent.normalize();
+        = compute_first_tangent_vector(surface_element.frenet_serret_frame.position,
+                                       surface_element.frenet_serret_frame.normal, point);
     first_frame_element.normal = surface_element.frenet_serret_frame.normal;
     first_frame_element.binormal = first_frame_element.tangent.cross(first_frame_element.normal);
     first_frame_element.curvature = surface_element.frenet_serret_frame.curvature;

@@ -97,7 +97,7 @@ namespace curvature_based_surface {
    * @return The closest Frenet-Serret frame element to the given point.
    */
   FrenetSerretFrameElement<T> compute_closer_frame_to_point(
-      CurvatureBasedSurfaceElement<T> surface_element, Eigen::Matrix<T, 3, 1> point) {
+      const CurvatureBasedSurfaceElement<T>& surface_element, const Eigen::Matrix<T, 3, 1>& point) {
     // First, retrieve the corresponding first tangent, orienting the osculating plane of the first
     // frame element to expand. The point should be in this plane.
     // Then, create the first frame element from which to expand.

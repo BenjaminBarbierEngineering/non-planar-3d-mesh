@@ -5,7 +5,7 @@
  * @file curvature_based_surface_utils.h
  * @brief Header file for utility functions related to curvature-based surfaces.
  */
-* /
+
 // Include necessary headers
 #include <Eigen/Dense>
 #include <vector>
@@ -13,7 +13,7 @@
 #include "curvature_based_surface/curvature_based_surface_types.h"
 #include "utils/utils.h"
 
-    namespace curvature_based_surface {
+namespace curvature_based_surface {
 
   /**
    * @brief Computes the Taylor-Young expansion matrices to the third order for a Frenet-Serret

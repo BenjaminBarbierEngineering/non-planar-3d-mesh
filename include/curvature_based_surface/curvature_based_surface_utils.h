@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "curvature_based_surface/curvature_based_surface_types.h"
+#include "utils/utils.h"
 
     namespace curvature_based_surface {
 
@@ -59,6 +60,18 @@
     return matrices;
   }
 
+  /**
+   * @brief Computes the closest Frenet-Serret frame element to a given point in space, based on a
+   * curvature-based surface element.
+   *
+   * @tparam T The data type for the position, tangent, normal, binormal, and curvature. Could be
+   * float, double or Jet.
+   * @param surface_element The curvature-based surface element from which to compute the closest
+   * frame element.
+   * @param point The point in space to which we want to find the closest frame element.
+   *
+   * @return The closest Frenet-Serret frame element to the given point.
+   */
   FrenetSerretFrameElement<T> compute_closer_frame_to_point(
       CurvatureBasedSurfaceElement<T> surface_element, Eigen::Matrix<T, 3, 1> point) {
     // First, retrieve the corresponding first tangent, orienting the osculating plane of the first
@@ -121,8 +134,45 @@
         = -2 * ((dr_dt_product(1, 3) + dr_dt_product(3, 1)) / 6 + dr_dt_product(2, 2) / 4);
     polynomial_coefficients(5) = -2 * ((dr_dt_product(2, 3) + dr_dt_product(3, 2)) / 12);
     polynomial_coefficients(6) = -2 * (dr_dt_product(3, 3) / 36);
-  }
 
+    /// TODO: Implement a polynomial solver for the given coefficients. For now, it is a placeholder
+    /// (empty vector).
+    auto all_closest_s_computed = utils::solve_polynomial(polynomial_coefficients);
+
+    // Now, we need to find the closest s among all the computed ones.
+    T closest_s = 0;
+    T closest_distance = std::numeric_limits<T>::max();
+    for (int i = 0; i < all_closest_s_computed.size(); ++i) {
+      T s = all_closest_s_computed(i);
+      Eigen::Matrix<T, 4, 1> s_vector;
+      s_vector << 1, s, s * s / 2, s * s * s / 6;
+      Eigen::Matrix<T, 3, 1> position_s
+          = taylor_young_matrices.third_order_expansion_position * s_vector;
+      T distance = (point - position_s).norm();
+      if (distance < closest_distance) {
+        closest_distance = distance;
+        closest_s = s;
+      }
+    }
+
+    // Now, we can compute the closest frame element to the point using the closest s.
+    FrenetSerretFrameElement<T> closest_frame_element;
+    Eigen::Matrix<T, 4, 1> closest_s_vector;
+    closest_s_vector << 1, closest_s, closest_s * closest_s / 2,
+        closest_s * closest_s * closest_s / 6;
+    closest_frame_element.position
+        = taylor_young_matrices.third_order_expansion_position * closest_s_vector;
+    closest_frame_element.tangent
+        = taylor_young_matrices.third_order_expansion_tangent * closest_s_vector;
+    closest_frame_element.normal
+        = taylor_young_matrices.third_order_expansion_normal * closest_s_vector;
+    closest_frame_element.binormal
+        = first_frame_element.binormal;  // The binormal is constant along the curve.
+    closest_frame_element.curvature
+        = first_frame_element.curvature + surface_element.curvature_derivative * closest_s;
+
+    return closest_frame_element;
+  }
 }  // namespace curvature_based_surface
 
 #endif  // CURVATURE_BASED_SURFACE_UTILS_H

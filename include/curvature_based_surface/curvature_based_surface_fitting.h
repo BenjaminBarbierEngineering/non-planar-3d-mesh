@@ -19,6 +19,9 @@
 namespace curvature_based_surface {
 
   struct PointToCurvatureBasedSurfaceCostFunction {
+    PointToCurvatureBasedSurfaceCostFunction(const Eigen::Vector3d point)
+        : point_to_fit_to(point) {}
+
     template <typename T>
     bool operator()(const T* const p0, const T* const normal_vector, const T* const curvature,
                     const T* const curvature_derivative, const T* const s, T* residuals) {

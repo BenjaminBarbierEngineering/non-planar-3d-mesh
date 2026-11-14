@@ -13,6 +13,7 @@ endif()
 
 include(cmake/CPM.cmake)
 find_package(Eigen3 3.4.0 REQUIRED)
+find_package(Ceres REQUIRED)
 
 file(GLOB_RECURSE headers
 	CONFIGURE_DEPENDS
